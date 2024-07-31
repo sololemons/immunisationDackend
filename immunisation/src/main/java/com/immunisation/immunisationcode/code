@@ -1,0 +1,98 @@
+..
+package com.immunisation.immunisationcode.CONTROLLER;
+
+import com.immunisation.immunisationcode.ENTITIES.Sibling;
+import com.immunisation.immunisationcode.SERVICES.siblingServices;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/siblings")
+public class siblingController {
+
+    private final siblingServices siblingServices;
+
+    public siblingController(siblingServices siblingServices) {
+        this.siblingServices = siblingServices;
+    }
+
+    @GetMapping("/get")
+    public List<Sibling> getSibling() {
+        return siblingServices.getAllSiblings();
+    }
+
+    @PostMapping("/add")
+    public Sibling addNewSibling(@RequestBody Sibling sibling) {
+        return siblingServices.addNewChildren(sibling);
+    }
+
+    @PutMapping("/update/{id}")
+    public Sibling updateSibling(@PathVariable Integer id, @RequestBody Sibling siblingDetails) {
+        return siblingServices.updateSibling(id, siblingDetails);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteSibling(@PathVariable Integer id) {
+        siblingServices.deleteSibling(id);
+        return "Sibling with ID " + id + " has been deleted.";
+    }
+
+    @GetMapping("/guardian/{Id}")
+    public List<Sibling> getSiblingsByGuardianId(@PathVariable Integer Id) {
+        return siblingServices.getSiblingsByGuardianId(Id);
+    }
+}
+
+
+
+...
+
+package com.immunisation.immunisationcode.SERVICES;
+
+import com.immunisation.immunisationcode.ENTITIES.Sibling;
+import com.immunisation.immunisationcode.REPOSITORIES.siblingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class siblingServices {
+
+    @Autowired
+    private final siblingRepository siblingRepository;
+
+    public siblingServices(siblingRepository siblingRepository) {
+        this.siblingRepository = siblingRepository;
+    }
+
+    public List<Sibling> getAllSiblings() {
+        return siblingRepository.findAll();
+    }
+
+    public Sibling addNewChildren(Sibling sibling) {
+        return siblingRepository.save(sibling);
+    }
+
+    public Sibling updateSibling(Integer id, Sibling siblingDetails) {
+        Sibling sibling = siblingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sibling not found with ID: " + id));
+
+        sibling.setFirstName(siblingDetails.getFirstName());
+        sibling.setLastName(siblingDetails.getLastName());
+        sibling.setDateOfBirth(siblingDetails.getDateOfBirth());
+
+
+
+        return siblingRepository.save(sibling);
+    }
+
+    public void deleteSibling(Integer id) {
+        siblingRepository.deleteById(id);
+    }
+
+    public List<Sibling> getSiblingsByGuardianId(Integer Id) {
+        return siblingRepository.findByGuardianId(Id);
+    }
+}
