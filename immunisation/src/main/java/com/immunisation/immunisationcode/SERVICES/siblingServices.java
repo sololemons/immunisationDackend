@@ -5,6 +5,7 @@ import com.immunisation.immunisationcode.DTOS.SiblingDto;
 import com.immunisation.immunisationcode.ENTITIES.Guardian;
 import com.immunisation.immunisationcode.ENTITIES.Sibling;
 
+import com.immunisation.immunisationcode.REPOSITORIES.ImmunizationScheduleRepository;
 import com.immunisation.immunisationcode.REPOSITORIES.siblingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,18 @@ import java.util.List;
 @Service
 public class siblingServices {
 
+
+
     @Autowired
     private final siblingRepository siblingRepository;
 
-    public siblingServices(siblingRepository siblingRepository) {
+    public siblingServices(siblingRepository siblingRepository, ImmunizationScheduleRepository immunizationScheduleRepository) {
         this.siblingRepository = siblingRepository;
+
     }
+
+
+
 
     public List<Sibling> getAllSiblings() {
         return siblingRepository.findAll();
@@ -35,7 +42,7 @@ public class siblingServices {
         return siblingRepository.save(sibling);
     }
 
-    public Sibling updateSibling(SiblingDto siblingDto, Integer id) {
+    public void updateSibling(SiblingDto siblingDto, Integer id) {
         Sibling sibling = siblingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sibling not found with ID: " + id));
 
@@ -43,11 +50,15 @@ public class siblingServices {
         sibling.setLastName(siblingDto.getLastName());
         sibling.setDateOfBirth(siblingDto.getDateOfBirth());
         sibling.setPlaceOfBirth(siblingDto.getPlaceOfBirth());
-        return siblingRepository.save(sibling);
+
+        // Save and return the updated sibling
+        siblingRepository.save(sibling);
     }
 
-    public void deleteSibling(Integer id) {
-        siblingRepository.deleteById(id);
+
+    public void deleteSibling(Integer siblingId) {
+
+        siblingRepository.deleteById(siblingId);
     }
 
     public List<Sibling> getSiblingsByGuardianId(Integer Id) {

@@ -13,7 +13,7 @@ public class Sibling {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonProperty("siblingId")
     @Column( name = "siblingId")
-    private int siblingId;
+    private Long siblingId;
     @Column(name = "firstName")
     private String firstName;
     @Column(name = "lastName")

@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("api/v1/auth/**").permitAll()
 
+
                         .anyRequest().authenticated() // All other requests require authentication
                 )
                 .exceptionHandling(exception -> exception

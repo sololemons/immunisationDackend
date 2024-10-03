@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 
 public interface siblingRepository extends JpaRepository<Sibling, Integer> {
-    List<Sibling> findByGuardianId(Integer Id);
+    List<Sibling> findByGuardianId(Integer guardianId);
 }
